@@ -1,0 +1,34 @@
+import hector.*
+import plantas.*
+import wollok.game.*
+
+program Hector {
+	
+//	CONFIG	
+	game.title("Hector")
+	game.height(10)
+	game.width(10)
+	game.ground("ground.png")
+
+//	VISUALES
+	game.addVisual(hector)
+	
+//	TECLADO
+	keyboard.up().onPressDo { hector.move(hector.position().up(1)); }
+	keyboard.down().onPressDo { hector.move(hector.position().down(1)); }
+	keyboard.left().onPressDo { hector.move(hector.position().left(1)); }
+	keyboard.right().onPressDo { hector.move(hector.position().right(1)); }
+	keyboard.m().onPressDo { hector.sembrar( new Maiz() )}
+	keyboard.t().onPressDo { hector.sembrar( new Trigo()) }
+	keyboard.o().onPressDo { hector.sembrar( new Tomaco()) }
+	keyboard.r().onPressDo { hector.regar() }
+	keyboard.c().onPressDo { hector.cosechar() }
+	keyboard.v().onPressDo { hector.vender() }
+	keyboard.s().onPressDo { hector.decir() }
+
+//  COLISIONES
+	//game.whenCollideDo(roque, { cosa => cosa.teChoco(roque) })
+	
+//	START
+	game.start()
+}
