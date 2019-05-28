@@ -27,6 +27,7 @@ program Hector {
 	keyboard.s().onPressDo { hector.decir() }
 
 //  COLISIONES
+	//game.colliders(hector)
 	//game.whenCollideDo(roque, { cosa => cosa.teChoco(roque) })
 	
 //	START

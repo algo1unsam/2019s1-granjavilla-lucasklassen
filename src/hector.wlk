@@ -17,8 +17,8 @@ object hector{
 	method sacarPlanta(unaPlanta){ plantas.remove(unaPlanta) }
 	method agregarPlanta(unaPlanta){ plantas.add(unaPlanta) }
 	method agregarPlantaParaVender(unaPlanta){ plantasParaVender.add(unaPlanta) }
-	method hayPlanta() = plantas.any{ planta => planta.position() == position }
-	method quePlantaHay() = plantas.find{planta => planta.position() ==position}
+	method hayPlanta() = !game.colliders(self).isEmpty()
+	method quePlantaHay() = plantas.find{planta => planta.position() == position}
 	method sembrar(planta) {
 		if(self.hayPlanta()) self.error("Ya hay una planta!")
 		self.agregarPlanta(planta)
