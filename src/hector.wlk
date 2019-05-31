@@ -1,44 +1,52 @@
 import wollok.game.*
 import plantas.*
+import mercado.*
 
 object hector{
 	var property position = game.at(7,5)
-	var plantas=[]
 	var plantasParaVender=[]
-	var monedas=0
+	var monedas=0 
 	
 	method image() = "player.png"	
-	method move(nuevaPosicion)=self.position(nuevaPosicion)
-	method monedas(){
-		monedas+=plantasParaVender.sum{ planta => planta.valor() }
-		return monedas
-		
-	}
-	method sacarPlanta(unaPlanta){ plantas.remove(unaPlanta) }
-	method agregarPlanta(unaPlanta){ plantas.add(unaPlanta) }
-	method agregarPlantaParaVender(unaPlanta){ plantasParaVender.add(unaPlanta) }
-	method hayPlanta() = !game.colliders(self).isEmpty()
-	method quePlantaHay() = plantas.find{planta => planta.position() == position}
+	method move(nuevaPosicion) = self.position(nuevaPosicion)
+	method sacarPlanta(unaPlanta){ plantasParaVender.remove(unaPlanta) }
+	method agregarPlanta(unaPlanta){ plantasParaVender.add(unaPlanta) }
+	method hayAlgo() = not (game.colliders(self).isEmpty()) 
+	method esPlanta() = game.colliders(self).first().esPlanta()
+	method queHay() = game.colliders(self).first()
+	
+	
 	method sembrar(planta) {
-		if(self.hayPlanta()) self.error("Ya hay una planta!")
+		if(self.hayAlgo() ) self.error("No se puede sembrar!")
 		self.agregarPlanta(planta)
 		planta.position(position)
 		return game.addVisual(planta)
 	}		
 	method regar() {
-		if(!self.hayPlanta()) self.error("No hay nada para regar!")
-		self.quePlantaHay().regar()
+		if(!self.hayAlgo() or !self.esPlanta()) self.error("No hay nada para regar!")
+		self.queHay().regar()
 	}
 	method cosechar() {
-		if(!self.hayPlanta()) self.error("No hay nada para cosechar!")
-		self.quePlantaHay().cosechar()
+		if(!self.hayAlgo() or !self.esPlanta()) self.error("No hay nada para cosechar!")
+		self.queHay().cosechar()
 	}
-	
+
+	method monedas() = monedas
+	method monedasVenta()= plantasParaVender.sum{ planta => planta.valor() }
+	method mercadoNoTieneMonedas()= game.colliders(self).first().monedas() < self.monedasVenta()
+	method cobrar(){ 
+		monedas+=self.monedasVenta()
+		self.queHay().pagar(self.monedasVenta())
+	}
 	method vender(){
-		self.monedas()
+		if(!self.hayAlgo() or self.esPlanta()) self.error("Aca no podes vender")
+		if(self.mercadoNoTieneMonedas()) self.error("El mercado no tiene suficientes monedas")
+		self.cobrar()
 		plantasParaVender=[]
 	}
-	method decir(){
-		game.say(self,monedas)
+	method cantidadPlantasVenta() = plantasParaVender.size()
+	method monedasYCantidadSay(){
+		game.say(self,"Tengo  " + monedas + " monedas y "+
+		+ self.cantidadPlantasVenta()+" plantas")
 	}
 }

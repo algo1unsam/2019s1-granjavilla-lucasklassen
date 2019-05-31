@@ -1,8 +1,12 @@
 import wollok.game.*
 import hector.*
 
-class Maiz {
-	var property position 
+class Planta{
+	var property position
+	method esPlanta() = true
+}
+
+class Maiz inherits Planta {
 	var property image = "corn_baby.png"
 	var esAdulta=false
 	
@@ -17,7 +21,7 @@ class Maiz {
 		if(esAdulta){
 			game.removeVisual(self)
 			hector.sacarPlanta(self)
-			hector.agregarPlantaParaVender(self)
+			hector.agregarPlanta(self)
 		}
 	}
 }
@@ -25,9 +29,8 @@ class Maiz {
 
 
 
-class Trigo {
+class Trigo inherits Planta{
 	var property image = "wheat_0.png"
-	var property position
 	var estado=0
 	
 	method valor() = (estado-1)*100
@@ -36,9 +39,10 @@ class Trigo {
 		if(estado==0) image="wheat_0.png"
 		if(estado==1) image="wheat_1.png"
 		if(estado==2) image="wheat_2.png"
-		if(estado==3){ 
-			image="wheat_3.png"
-			estado=-1
+		if(estado==3) image="wheat_3.png"
+		if(estado==4) {
+			estado=0
+			image="wheat_0.png"
 			}
 		
 	}
@@ -46,7 +50,7 @@ class Trigo {
 		if(estado>=2){
 			game.removeVisual(self)
 			hector.sacarPlanta(self)
-			hector.agregarPlantaParaVender(self)
+			hector.agregarPlanta(self)
 		}
 	}
 }
@@ -54,20 +58,23 @@ class Trigo {
 
 
 
-class Tomaco {
-	
-	var property position 
+class Tomaco inherits Planta{
 	var property image = "tomaco.png"
 	
 	method valor() = 80	
 	method regar() {
 		if(self.position().y()==9) position=game.at(self.position().x(),-1)
+		if(self.hayAlgoArriba()) self.error("No se puede regar")
 		self.position(self.position().up(1))
 	}
+	method posicionArriba() = game.at(self.position().x(),(self.position().y()) +1)
+	method hayAlgoArriba()= not self.posicionArriba().allElements().isEmpty()
+		
+	
 	method cosechar(){
 		game.removeVisual(self)
 		hector.sacarPlanta(self)
-		hector.agregarPlantaParaVender(self)
+		hector.agregarPlanta(self)
 	}
 
 }

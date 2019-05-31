@@ -1,17 +1,23 @@
 import hector.*
 import plantas.*
+import mercado.*
 import wollok.game.*
 
 program Hector {
 	
 //	CONFIG	
-	game.title("Hector")
+	game.title("Farm Ville Game")
 	game.height(10)
 	game.width(10)
 	game.ground("ground.png")
+	
 
 //	VISUALES
 	game.addVisual(hector)
+	game.addVisual(new Mercado(position=game.at(1,1),monedas=100))
+	game.addVisual(new Mercado(position=game.at(4,4),monedas=500))	
+	game.addVisual(new Mercado(position=game.at(8,8),monedas=1000))	
+	game.errorReporter(hector)
 	
 //	TECLADO
 	keyboard.up().onPressDo { hector.move(hector.position().up(1)); }
@@ -24,7 +30,7 @@ program Hector {
 	keyboard.r().onPressDo { hector.regar() }
 	keyboard.c().onPressDo { hector.cosechar() }
 	keyboard.v().onPressDo { hector.vender() }
-	keyboard.s().onPressDo { hector.decir() }
+	keyboard.space().onPressDo { hector.monedasYCantidadSay() }
 
 //  COLISIONES
 	//game.colliders(hector)
